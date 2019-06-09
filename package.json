@@ -1,0 +1,15 @@
+{
+  "name": "robloxdiscordlogs",
+  "version": "1.0.0",
+  "description": "Syncs roblox chat with a discord channel",
+  "main": "index.js",
+  "scripts": {
+    "test": "None"
+  },
+  "keywords": [
+    "Roblox",
+    "Discord"
+  ],
+  "author": "Dionysusnu",
+  "license": "GPL"
+}
