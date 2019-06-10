@@ -1,9 +1,7 @@
 const { Client, RichEmbed } = require('discord.js');
 const client = new Client();
 const auth = require('./private/auth.json');
-const db = require('quick.db');
-
-
+// const db = require('quick.db');
 
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
@@ -65,10 +63,14 @@ client.on('raw', async event => {
 // end - MessageReaction
 
 client.on('message', message => {
-    if (!message.content.startsWith('!server')) {
-        return;
-    }
-    
+	if (message.content == '!restart' && message.author.id == 214262712753061889) {
+		message.channel.send('restarting').then(() => {
+			process.exit(0);
+		});
+	}
+	if (!message.content.startsWith('!server')) {
+		return;
+	}
 });
 
 client.on('error', error => {
@@ -78,9 +80,17 @@ client.on('error', error => {
 
 client.login(auth.token);
 
-const express = require('express')
-const app = express()
-const port = 3000
+const http = require('http');
 
-app.get('/POST/', (req, res) => res.send('Hello World!'))
+const hostname = '127.0.0.1';
+const port = 3000;
 
+const server = http.createServer((req, res) => {
+	res.statusCode = 200;
+	res.setHeader('Content-Type', 'text/plain');
+	res.end('Hello, World!\n');
+});
+
+server.listen(port, hostname, () => {
+	console.log(`Server running at http://${hostname}:${port}/`);
+});
