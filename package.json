@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/Dionysusnu/RobloxDiscordLogs/issues"
   },
-  "homepage": "https://github.com/Dionysusnu/RobloxDiscordLogs#readme"
+  "homepage": "https://github.com/Dionysusnu/RobloxDiscordLogs#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "express": "^4.17.1"
+  }
 }
