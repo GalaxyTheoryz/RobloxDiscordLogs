@@ -21,7 +21,7 @@ client.on('ready', () => {
 	console.log(date);
 	console.log(`Logged in as ${client.user.tag}!`);
 	LogChannel = client.channels.get(auth.channel_id);
-	console.log(LogChannel);
+	// console.log(LogChannel);
 });
 
 
