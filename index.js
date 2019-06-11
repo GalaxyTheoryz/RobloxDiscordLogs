@@ -4,6 +4,17 @@ const auth = require('./private/auth.json');
 // const db = require('quick.db');
 
 const queue = {};
+queue.addServer = function() {
+	let newservernum;
+	for (let i = 1; i <= queue.length; i++) {
+		if (!queue[toString(i)]) {
+			newservernum = i;
+		}
+	}
+	queue[toString(newservernum)] = [];
+	return newservernum;
+};
+
 let LogChannel;
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
@@ -81,7 +92,7 @@ client.on('message', message => {
 	if (!queue[servernum]) return message.reply('that server is not online.');
 	const newmessage = {
 		'username': message.author.username,
-		'message': message.content.substring(8),
+		'message': message.content.substring(7 + servernum.length),
 	};
 	queue[servernum].push(newmessage);
 });
@@ -97,9 +108,22 @@ const app = require('./Interface/app');
 
 app.post('/', (req, res) => {
 	const bodydata = require(req.body);
+	const response = {};
 	if (bodydata.type == 'newserver') {
-		queue[toString(queue.length)] = [];
+		const servernum = queue.addServer();
+		response.servernum = servernum;
+		res.send(response);
 	} else if (bodydata.type == 'serverclose') {
-		queue[bodydata.servernum] = null;
+		queue[toString(bodydata.servernum)] = null;
+	} else if (bodydata.type == 'message') {
+		const embed = new RichEmbed();
+		for (let i = 0; i < bodydata.messages.length; i++) {
+			embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
+		}
+		LogChannel.send('', embed);
+		response.servernum = bodydata.servernum;
+		response.messages = queue[toString(bodydata.servernum)];
+		queue[toString(bodydata.servernum)] = [];
+		res.send(response);
 	}
 });
