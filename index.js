@@ -3,10 +3,14 @@ const client = new Client();
 const auth = require('./private/auth.json');
 // const db = require('quick.db');
 
+const queue = {};
+let LogChannel;
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
 	console.log(date);
 	console.log(`Logged in as ${client.user.tag}!`);
+	LogChannel = client.channels.get(auth.channel_id);
+	console.log(LogChannel);
 });
 
 
@@ -63,6 +67,7 @@ client.on('raw', async event => {
 // end - MessageReaction
 
 client.on('message', message => {
+	if (message.channel !== LogChannel) return;
 	if (message.content == '!restart' && message.author.id == 214262712753061889) {
 		message.channel.send('restarting').then(() => {
 			process.exit(0);
@@ -71,6 +76,14 @@ client.on('message', message => {
 	if (!message.content.startsWith('!server')) {
 		return;
 	}
+	const servernum = message.content.substring(7).match(/\d+/);
+	if (!servernum) return message.reply('please provide a valid server number');
+	if (!queue[servernum]) return message.reply('that server is not online.');
+	const newmessage = {
+		'username': message.author.username,
+		'message': message.content.substring(8),
+	};
+	queue[servernum].push(newmessage);
 });
 
 client.on('error', error => {
@@ -80,17 +93,13 @@ client.on('error', error => {
 
 client.login(auth.token);
 
-const http = require('http');
+const app = require('./Interface/app');
 
-const hostname = '127.0.0.1';
-const port = 3000;
-
-const server = http.createServer((req, res) => {
-	res.statusCode = 200;
-	res.setHeader('Content-Type', 'text/plain');
-	res.end('Hello, World!\n');
-});
-
-server.listen(port, hostname, () => {
-	console.log(`Server running at http://${hostname}:${port}/`);
+app.post('/', (req, res) => {
+	const bodydata = require(req.body);
+	if (bodydata.type == 'newserver') {
+		queue[toString(queue.length)] = [];
+	} else if (bodydata.type == 'serverclose') {
+		queue[bodydata.servernum] = null;
+	}
 });
