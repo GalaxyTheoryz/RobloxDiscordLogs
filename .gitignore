@@ -80,3 +80,6 @@ typings/
 
 #database
 *.sqlite
+
+#VSCode
+.code-workspace
