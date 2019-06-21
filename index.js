@@ -1,6 +1,6 @@
 const { Client, RichEmbed } = require('discord.js');
 const client = new Client();
-const auth = require('./private/auth.json');
+const auth = require('./auth.json');
 // const db = require('quick.db');
 
 const queue = {};
