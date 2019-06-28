@@ -1,6 +1,6 @@
 const { Client, RichEmbed } = require('discord.js');
 const client = new Client();
-const auth = require('./auth.json');
+// const auth = require('./auth.json');
 // const db = require('quick.db');
 
 const queue = {};
@@ -102,7 +102,7 @@ client.on('error', error => {
 	console.error(error.message);
 });
 
-client.login(auth.token);
+client.login(process.env.AUTH_TOKEN);
 
 const express = require('express');
 const app = express();
