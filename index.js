@@ -12,6 +12,7 @@ queue.addServer = function() {
 		}
 	}
 	queue[toString(newservernum)] = [];
+	console.log("New server: " + newservernum);
 	return newservernum;
 };
 
@@ -122,6 +123,7 @@ app.post('/bot', (req, res) => {
 	const response = {};
 	if (bodydata.type == 'newserver') {
 		const servernum = queue.addServer();
+		console.log("test1")
 		response.servernum = servernum;
 		res.send(response);
 	} else if (bodydata.type == 'serverclose') {
@@ -129,7 +131,7 @@ app.post('/bot', (req, res) => {
 		res.send();
 	} else if (bodydata.type == 'message') {
 		const embed = new RichEmbed();
-		embed.setTitle(bodydata.servernum);
+		embed.setTitle("Server " + bodydata.servernum);
 		for (let i = 0; i < bodydata.messages.length; i++) {
 			embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
 		}
