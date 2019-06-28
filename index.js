@@ -109,7 +109,7 @@ const app = express();
 
 app.post('/bot', (req, res) => {
 	console.log('got POST request on /bot:');
-	console.log(req);
+	console.log(req.body);
 	const bodydata = require(req.body);
 	const response = {};
 	if (bodydata.type == 'newserver') {
