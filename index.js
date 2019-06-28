@@ -106,7 +106,7 @@ client.login(auth.token);
 
 const app = require('./Interface/app');
 
-app.post('/', (req, res) => {
+app.post('/bot', (req, res) => {
 	const bodydata = require(req.body);
 	const response = {};
 	if (bodydata.type == 'newserver') {
@@ -128,6 +128,12 @@ app.post('/', (req, res) => {
 	}
 });
 
-app.get('/', (req,res) => {
-	res.send(405, 'Method Not Allowed')
+app.get('/bot', (req,res) => {
+	res.status(405).send('Method Not Allowed')
 })
+
+const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
+      ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
+	
+app.listen(port, ip)
+console.log('App listening on http://%s:%s', ip, port)
