@@ -107,6 +107,8 @@ client.login(auth.token);
 const app = require('./Interface/app');
 
 app.post('/bot', (req, res) => {
+	console.log('got POST request on /bot:');
+	console.log(req);
 	const bodydata = require(req.body);
 	const response = {};
 	if (bodydata.type == 'newserver') {
@@ -115,6 +117,7 @@ app.post('/bot', (req, res) => {
 		res.send(response);
 	} else if (bodydata.type == 'serverclose') {
 		queue[toString(bodydata.servernum)] = null;
+		res.send();
 	} else if (bodydata.type == 'message') {
 		const embed = new RichEmbed();
 		for (let i = 0; i < bodydata.messages.length; i++) {
