@@ -129,6 +129,7 @@ app.post('/bot', (req, res) => {
 		res.send();
 	} else if (bodydata.type == 'message') {
 		const embed = new RichEmbed();
+		embed.setTitle(bodydata.servernum);
 		for (let i = 0; i < bodydata.messages.length; i++) {
 			embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
 		}
