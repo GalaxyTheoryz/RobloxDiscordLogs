@@ -104,7 +104,8 @@ client.on('error', error => {
 
 client.login(auth.token);
 
-const app = require('express')();
+const express = require('express');
+const app = express();
 
 app.post('/bot', (req, res) => {
 	console.log('got POST request on /bot:');
