@@ -107,6 +107,8 @@ client.login(process.env.AUTH_TOKEN);
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 app.post('/bot', (req, res) => {
 	console.log('got POST request on /bot:');
 	console.log(req.body);
