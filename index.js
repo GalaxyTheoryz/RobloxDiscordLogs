@@ -142,9 +142,21 @@ app.post('/bot', (req, res) => {
 		queue[toString(bodydata.servernum)] = [];
 		res.send(response);
 	} else if (bodydata.type == 'proxy') {
-		switch (bodydata.method) {
-			case 'get':
-				// TODO using axios
+		try {
+			axios({
+				url: bodydata.url,
+				method: bodydata.method,
+			}).then(proxyresponse => {
+				response = proxyresponse
+			}).catch(error => {
+				console.error("Proxy error: ")
+				console.error(error)
+			}).finally(() => {
+				res.send(response)
+			})
+		} catch (error) {
+			console.error("Proxy error: ")
+			console.error(error)
 		}
 	}
 });
