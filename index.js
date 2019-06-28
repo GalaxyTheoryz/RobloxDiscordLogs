@@ -110,6 +110,7 @@ client.on('error', error => {
 
 client.login(process.env.AUTH_TOKEN);
 
+const axios = require('axios');
 const express = require('express');
 const app = express();
 
@@ -140,6 +141,11 @@ app.post('/bot', (req, res) => {
 		response.messages = queue[toString(bodydata.servernum)];
 		queue[toString(bodydata.servernum)] = [];
 		res.send(response);
+	} else if (bodydata.type == 'proxy') {
+		switch (bodydata.method) {
+			case 'get':
+				// TODO using axios
+		}
 	}
 });
 
