@@ -20,7 +20,7 @@ client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
 	console.log(date);
 	console.log(`Logged in as ${client.user.tag}!`);
-	LogChannel = client.channels.get(auth.channel_id);
+	LogChannel = client.channels.get(process.env.LOG_CHANNEL_ID);
 	// console.log(LogChannel);
 });
 
