@@ -6,7 +6,8 @@ const client = new Client();
 const queue = {};
 queue.addServer = function() {
 	let newservernum;
-	for (let i = 1; i <= queue.length; i++) {
+	for (let i = 1; i <= queue.length + 1; i++) {
+		console.log(i);
 		if (!queue[toString(i)]) {
 			newservernum = i;
 		}
@@ -126,10 +127,10 @@ app.post('/bot', (req, res) => {
 		const servernum = queue.addServer();
 		console.log("test1")
 		response.servernum = servernum;
-		res.send(response);
+		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
 		queue[toString(bodydata.servernum)] = null;
-		res.send();
+		res.end();
 	} else if (bodydata.type == 'message') {
 		const embed = new RichEmbed();
 		embed.setTitle("Server " + bodydata.servernum);
@@ -140,7 +141,7 @@ app.post('/bot', (req, res) => {
 		response.servernum = bodydata.servernum;
 		response.messages = queue[toString(bodydata.servernum)];
 		queue[toString(bodydata.servernum)] = [];
-		res.send(response);
+		res.json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
 			axios({
