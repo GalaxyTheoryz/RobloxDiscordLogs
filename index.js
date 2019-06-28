@@ -21,6 +21,11 @@ client.on('ready', () => {
 	console.log(date);
 	console.log(`Logged in as ${client.user.tag}!`);
 	LogChannel = client.channels.get(process.env.LOG_CHANNEL_ID);
+	if (LogChannel) {
+		console.log("Found log channel")
+	} else {
+		console.error("Couldn't find log channel")
+	}
 	// console.log(LogChannel);
 });
 
