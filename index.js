@@ -127,3 +127,7 @@ app.post('/', (req, res) => {
 		res.send(response);
 	}
 });
+
+app.get('/', (req,res) => {
+	res.send(405, 'Method Not Allowed')
+})
