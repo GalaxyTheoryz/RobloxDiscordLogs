@@ -112,7 +112,8 @@ app.use(express.json());
 app.post('/bot', (req, res) => {
 	console.log('got POST request on /bot:');
 	console.log(req.body);
-	const bodydata = require(req.body);
+	// const bodydata = require(req.body);
+	const bodydata = req.body
 	const response = {};
 	if (bodydata.type == 'newserver') {
 		const servernum = queue.addServer();
