@@ -102,7 +102,7 @@ client.on('message', message => {
 	}
 	const servernum = message.content.substring(7).match(/\d+/);
 	if (!servernum) return message.reply('please provide a valid server number');
-	if (!queue[servernum]) return message.reply('that server is not online.');
+	if (!queue.has(servernum)) return message.reply('that server is not online.');
 	const newmessage = {
 		'username': message.author.username,
 		'message': message.content.substring(7 + servernum.length),
