@@ -46,6 +46,9 @@ const addServer = function() {
 
 const findServerFromChannel = function(channel) {
 	for (const [key, value] of channels) {
+		console.log(value);
+		console.log('comparing to');
+		console.log(channel);
 		if (value == channel) {
 			return key;
 		}
@@ -106,6 +109,7 @@ client.on('raw', async event => {
 
 client.on('message', message => {
 	console.log(message.author.tag + ': ' + message.content);
+	console.log(message.channel);
 	const servernum = findServerFromChannel(message.channel);
 	console.log(servernum);
 	if (!servernum) {
@@ -144,7 +148,8 @@ app.post('/bot', (req, res) => {
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
-		channels.get(bodydata.servernum).delete();
+		const channel = channels.get(bodydata.servernum);
+		channel.delete();
 		channels.delete(bodydata.servernum);
 		queue.delete(bodydata.servernum);
 		res.end();
