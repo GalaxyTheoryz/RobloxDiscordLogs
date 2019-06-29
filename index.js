@@ -38,8 +38,9 @@ const addServer = function() {
 	const channeldata = new Object();
 	channeldata.type = 'text';
 	channeldata.parent = categorychannel;
-	const newchannel = guild.createChannel('Server' + newservernum, channeldata);
-	channels.set(newservernum, newchannel);
+	guild.createChannel('Server' + newservernum, channeldata).then((newchannel => {
+		channels.set(newservernum, newchannel);
+	}));
 	console.log('New server: ' + newservernum);
 	return newservernum;
 };
