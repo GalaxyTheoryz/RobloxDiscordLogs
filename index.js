@@ -1,42 +1,56 @@
-const { Client, RichEmbed } = require('discord.js');
+const { Client, RichEmbed, ChannelData } = require('discord.js');
 const client = new Client();
 // const auth = require('./auth.json');
 // const db = require('quick.db');
 
-const queue = new Map();
+let guild;
+let categorychannel;
+client.on('ready', () => {
+	const date = new Date(client.readyTimestamp);
+	console.log(date);
+	console.log(`Logged in as ${client.user.tag}!`);
+	guild = client.guilds.get(process.env.GUILD_ID);
+	categorychannel = guild.channels.get(process.env.CATEGORY_ID);
+	if (categorychannel) {
+		console.log('Found guild');
+	} else {
+		console.error('Couldn\'t find guild');
+	}
+	// console.log(LogChannel);
+});
 
+const queue = new Map();
+const channels = new Map();
 const isServerNumFree = function(num) {
 	return !queue.has(num);
 };
 const addServer = function() {
 	let newservernum;
 	// console.log(queue.size);
-	let i = 1
+	let i = 1;
 	while (!newservernum) {
 		if (isServerNumFree(i)) {
 			newservernum = i;
 		}
-		i = i+1;
+		i = i + 1;
 	}
 	queue.set(newservernum, []);
-	console.log("New server: " + newservernum);
+	const channeldata = new ChannelData();
+	channeldata.type = 'text';
+	channeldata.parent = categorychannel;
+	const newchannel = guild.createChannel('Server' + newservernum, channeldata);
+	channels.set(newservernum, newchannel);
+	console.log('New server: ' + newservernum);
 	return newservernum;
 };
 
-let LogChannel;
-client.on('ready', () => {
-	const date = new Date(client.readyTimestamp);
-	console.log(date);
-	console.log(`Logged in as ${client.user.tag}!`);
-	LogChannel = client.channels.get(process.env.LOG_CHANNEL_ID);
-	if (LogChannel) {
-		console.log("Found log channel")
-	} else {
-		console.error("Couldn't find log channel")
+const findServerFromChannel = function(channel) {
+	for (const [key, value] of channels) {
+		if (value == channel) {
+			return key;
+		}
 	}
-	// console.log(LogChannel);
-});
-
+};
 
 // start - messageReaction
 /* only for emoji adds, but we don't do anything with those (yet)
@@ -91,25 +105,15 @@ client.on('raw', async event => {
 // end - MessageReaction
 
 client.on('message', message => {
-	if (message.channel !== LogChannel) return;
-	if (message.content == '!restart' && message.author.id == 214262712753061889) {
-		message.channel.send('restarting').then(() => {
-			process.exit(0);
-		});
-	}
-	if (!message.content.startsWith('!server')) {
+	if (!message.channel.parent == categorychannel) {
 		return;
 	}
-	console.log(message.content)
-	const servernum = parseInt(message.content.substring(7).match(/\d+/)[0]);
-	console.log(servernum)
-	if (!servernum) return message.reply('please provide a valid server number');
-	if (!queue.has(servernum)) return message.reply('that server is not online.');
+	console.log(message.content);
 	const newmessage = {
 		'username': message.author.username,
-		'message': message.content.slice(7 + (servernum + "").length),
+		'message': message.content,
 	};
-	console.log(newmessage.message);
+	const servernum = findServerFromChannel(message.channel);
 	const currentqueue = queue.get(servernum);
 	currentqueue.push(newmessage);
 	queue.set(servernum, currentqueue);
@@ -132,23 +136,23 @@ app.post('/bot', (req, res) => {
 	console.log('got POST request on /bot:');
 	console.log(req.body);
 	// const bodydata = require(req.body);
-	const bodydata = req.body
-	const response = {};
+	const bodydata = req.body;
+	let response = {};
 	if (bodydata.type == 'newserver') {
 		const servernum = addServer();
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
+		channels.delete(bodydata.servernum);
 		queue.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'message') {
 		if (bodydata.messages.length != 0) {
 			const embed = new RichEmbed();
-			embed.setTitle("Server " + bodydata.servernum);
 			for (let i = 0; i < bodydata.messages.length; i++) {
 				embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
 			}
-			LogChannel.send('', embed);
+			channels.get(bodydata.servernum).send('', embed);
 		}
 		response.servernum = bodydata.servernum;
 		response.messages = queue.get(bodydata.servernum);
@@ -161,26 +165,26 @@ app.post('/bot', (req, res) => {
 				url: bodydata.url,
 				method: bodydata.method,
 			}).then(proxyresponse => {
-				response = proxyresponse
+				response = proxyresponse;
 			}).catch(error => {
-				console.error("Proxy error: ")
-				console.error(error)
+				console.error('Proxy error: ');
+				console.error(error);
 			}).finally(() => {
-				res.send(response)
-			})
+				res.send(response);
+			});
 		} catch (error) {
-			console.error("Proxy error: ")
-			console.error(error)
+			console.error('Proxy error: ');
+			console.error(error);
 		}
 	}
 });
 
-app.get('/bot', (req,res) => {
-	res.status(405).send('Method Not Allowed')
-})
+app.get('/bot', (req, res) => {
+	res.status(405).send('Method Not Allowed');
+});
 
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-      ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
-	
-app.listen(port, ip)
-console.log('App listening on http://%s:%s', ip, port)
+	ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+
+app.listen(port, ip);
+console.log('App listening on http://%s:%s', ip, port);
