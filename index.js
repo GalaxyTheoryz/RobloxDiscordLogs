@@ -109,7 +109,9 @@ client.on('message', message => {
 		'username': message.author.username,
 		'message': message.content.substring(7 + servernum.length),
 	};
-	queue.set(servernum, queue.get(servernum).push(newmessage));
+	const currentqueue = queue.get(servernum);
+	currentqueue.push(newmessage);
+	queue.set(servernum, currentqueue);
 });
 
 client.on('error', error => {
