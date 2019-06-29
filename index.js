@@ -1,4 +1,4 @@
-const { Client, RichEmbed, ChannelData } = require('discord.js');
+const { Client, RichEmbed } = require('discord.js');
 const client = new Client();
 // const auth = require('./auth.json');
 // const db = require('quick.db');
@@ -35,7 +35,7 @@ const addServer = function() {
 		i = i + 1;
 	}
 	queue.set(newservernum, []);
-	const channeldata = new ChannelData();
+	const channeldata = new Object();
 	channeldata.type = 'text';
 	channeldata.parent = categorychannel;
 	const newchannel = guild.createChannel('Server' + newservernum, channeldata);
