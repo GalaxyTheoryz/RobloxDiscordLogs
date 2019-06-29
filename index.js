@@ -120,7 +120,7 @@ client.on('message', message => {
 		return;
 	}
 	const newmessage = {
-		'username': message.author.username,
+		'username': message.member.nickname || message.author.username,
 		'message': message.content,
 	};
 	const currentqueue = queue.get(servernum);
