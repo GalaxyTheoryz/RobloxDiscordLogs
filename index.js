@@ -47,9 +47,9 @@ const addServer = function() {
 
 const findServerFromChannel = function(channel) {
 	for (const [key, value] of channels) {
-		console.log(value);
-		console.log('comparing to');
-		console.log(channel);
+		// console.log(value);
+		// console.log('comparing to');
+		// console.log(channel);
 		if (value == channel) {
 			return key;
 		}
