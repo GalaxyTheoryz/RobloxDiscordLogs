@@ -165,6 +165,12 @@ app.post('/bot', (req, res) => {
 			}
 			channels.get(bodydata.servernum).send('', embed);
 		}
+		let topic = bodydata.gamename + ': ' + bodydata.players.length + ' players online: ';
+		for (let i = 0; i < bodydata.players.length; i++) {
+			topic += bodydata.players[i] + ', ';
+		}
+		topic = topic.substring(0, topic.length - 2);
+		channels.get(bodydata.servernum).setTopic(topic);
 		response.servernum = bodydata.servernum;
 		response.messages = queue.get(bodydata.servernum);
 		console.log(response);
