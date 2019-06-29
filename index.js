@@ -107,9 +107,9 @@ client.on('message', message => {
 	if (!queue.has(servernum)) return message.reply('that server is not online.');
 	const newmessage = {
 		'username': message.author.username,
-		'message': message.content.slice(7 + servernum.length),
+		'message': message.content.slice(7 + (servernum + "").length),
 	};
-	console.log(message.content.slice(7 + (servernum.length + "")))
+	console.log(newmessage.message);
 	const currentqueue = queue.get(servernum);
 	currentqueue.push(newmessage);
 	queue.set(servernum, currentqueue);
