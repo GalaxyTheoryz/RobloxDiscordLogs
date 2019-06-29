@@ -143,6 +143,7 @@ app.post('/bot', (req, res) => {
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
+		channels.get(bodydata.servernum).delete();
 		channels.delete(bodydata.servernum);
 		queue.delete(bodydata.servernum);
 		res.end();
