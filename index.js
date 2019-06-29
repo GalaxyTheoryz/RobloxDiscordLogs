@@ -101,7 +101,7 @@ client.on('message', message => {
 		return;
 	}
 	console.log(message.content)
-	const servernum = message.content.substring(7).match(/\d+/);
+	const servernum = parseInt(message.content.substring(7).match(/\d+/)[1]);
 	console.log(servernum)
 	if (!servernum) return message.reply('please provide a valid server number');
 	if (!queue.has(servernum)) return message.reply('that server is not online.');
