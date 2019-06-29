@@ -10,12 +10,13 @@ const isServerNumFree = function(num) {
 };
 const addServer = function() {
 	let newservernum;
-	console.log(queue.size);
+	// console.log(queue.size);
 	let i = 1
 	while (!newservernum) {
 		if (isServerNumFree(i)) {
 			newservernum = i;
 		}
+		i = i+1;
 	}
 	queue.set(newservernum, []);
 	console.log("New server: " + newservernum);
@@ -114,7 +115,7 @@ client.on('error', error => {
 	console.error(error.message);
 });
 
-// client.login(process.env.AUTH_TOKEN);
+client.login(process.env.AUTH_TOKEN);
 
 const axios = require('axios');
 const express = require('express');
@@ -130,7 +131,6 @@ app.post('/bot', (req, res) => {
 	const response = {};
 	if (bodydata.type == 'newserver') {
 		const servernum = addServer();
-		console.log("test1")
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
@@ -145,7 +145,7 @@ app.post('/bot', (req, res) => {
 		LogChannel.send('', embed);
 		response.servernum = bodydata.servernum;
 		response.messages = queue[toString(bodydata.servernum)];
-		queue[toString(bodydata.servernum)] = [];
+		queue.set(bodydata.servernum, []);
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
