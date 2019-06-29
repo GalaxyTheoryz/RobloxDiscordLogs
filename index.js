@@ -3,16 +3,21 @@ const client = new Client();
 // const auth = require('./auth.json');
 // const db = require('quick.db');
 
-const queue = {};
-queue.addServer = function() {
+const queue = new Map();
+
+const isServerNumFree = function(num) {
+	return !queue.has(num);
+};
+const addServer = function() {
 	let newservernum;
-	for (let i = 1; i <= queue.length + 1; i++) {
-		console.log(i);
-		if (!queue[toString(i)]) {
+	console.log(queue.size);
+	let i = 1
+	while (!newservernum) {
+		if (isServerNumFree(i)) {
 			newservernum = i;
 		}
 	}
-	queue[toString(newservernum)] = [];
+	queue.set(newservernum, []);
 	console.log("New server: " + newservernum);
 	return newservernum;
 };
@@ -101,7 +106,7 @@ client.on('message', message => {
 		'username': message.author.username,
 		'message': message.content.substring(7 + servernum.length),
 	};
-	queue[servernum].push(newmessage);
+	queue.set(servernum, queue.get(servernum).push(newmessage));
 });
 
 client.on('error', error => {
@@ -109,7 +114,7 @@ client.on('error', error => {
 	console.error(error.message);
 });
 
-client.login(process.env.AUTH_TOKEN);
+// client.login(process.env.AUTH_TOKEN);
 
 const axios = require('axios');
 const express = require('express');
@@ -124,12 +129,12 @@ app.post('/bot', (req, res) => {
 	const bodydata = req.body
 	const response = {};
 	if (bodydata.type == 'newserver') {
-		const servernum = queue.addServer();
+		const servernum = addServer();
 		console.log("test1")
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
-		queue[toString(bodydata.servernum)] = null;
+		queue.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'message') {
 		const embed = new RichEmbed();
