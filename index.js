@@ -142,7 +142,7 @@ app.post('/bot', (req, res) => {
 		queue.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'message') {
-		if (bodydata.messages.length) {
+		if (bodydata.messages.length != 0) {
 			const embed = new RichEmbed();
 			embed.setTitle("Server " + bodydata.servernum);
 			for (let i = 0; i < bodydata.messages.length; i++) {
