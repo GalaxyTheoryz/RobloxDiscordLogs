@@ -100,7 +100,9 @@ client.on('message', message => {
 	if (!message.content.startsWith('!server')) {
 		return;
 	}
+	console.log(message.content)
 	const servernum = message.content.substring(7).match(/\d+/);
+	console.log(servernum)
 	if (!servernum) return message.reply('please provide a valid server number');
 	if (!queue.has(servernum)) return message.reply('that server is not online.');
 	const newmessage = {
@@ -144,7 +146,7 @@ app.post('/bot', (req, res) => {
 		}
 		LogChannel.send('', embed);
 		response.servernum = bodydata.servernum;
-		response.messages = queue[toString(bodydata.servernum)];
+		response.messages = queue.get(bodydata.servernum);
 		queue.set(bodydata.servernum, []);
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
