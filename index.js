@@ -142,12 +142,14 @@ app.post('/bot', (req, res) => {
 		queue.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'message') {
-		const embed = new RichEmbed();
-		embed.setTitle("Server " + bodydata.servernum);
-		for (let i = 0; i < bodydata.messages.length; i++) {
-			embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
+		if (bodydata.messages.length) {
+			const embed = new RichEmbed();
+			embed.setTitle("Server " + bodydata.servernum);
+			for (let i = 0; i < bodydata.messages.length; i++) {
+				embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
+			}
+			LogChannel.send('', embed);
 		}
-		LogChannel.send('', embed);
 		response.servernum = bodydata.servernum;
 		response.messages = queue.get(bodydata.servernum);
 		console.log(response);
