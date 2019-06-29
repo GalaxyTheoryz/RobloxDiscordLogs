@@ -147,6 +147,7 @@ app.post('/bot', (req, res) => {
 		LogChannel.send('', embed);
 		response.servernum = bodydata.servernum;
 		response.messages = queue.get(bodydata.servernum);
+		console.log(response);
 		queue.set(bodydata.servernum, []);
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
