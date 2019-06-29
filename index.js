@@ -109,7 +109,7 @@ client.on('raw', async event => {
 
 client.on('message', message => {
 	console.log(message.author.tag + ': ' + message.content);
-	console.log(message.channel);
+	// console.log(message.channel);
 	const servernum = findServerFromChannel(message.channel);
 	console.log(servernum);
 	if (!servernum) {
