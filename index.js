@@ -109,6 +109,9 @@ client.on('raw', async event => {
 // end - MessageReaction
 
 client.on('message', message => {
+	if (message.author.id == client.user.id) {
+		return;
+	}
 	console.log(message.author.tag + ': ' + message.content);
 	// console.log(message.channel);
 	const servernum = findServerFromChannel(message.channel);
