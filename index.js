@@ -105,15 +105,15 @@ client.on('raw', async event => {
 // end - MessageReaction
 
 client.on('message', message => {
-	if (!message.channel.parent == categorychannel) {
+	console.log(message);
+	const servernum = findServerFromChannel(message.channel);
+	if (!servernum) {
 		return;
 	}
-	console.log(message.content);
 	const newmessage = {
 		'username': message.author.username,
 		'message': message.content,
 	};
-	const servernum = findServerFromChannel(message.channel);
 	const currentqueue = queue.get(servernum);
 	currentqueue.push(newmessage);
 	queue.set(servernum, currentqueue);
