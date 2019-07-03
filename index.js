@@ -19,14 +19,15 @@ client.on('ready', () => {
 	// console.log(LogChannel);
 });
 
-const queue = new Map();
+const messagequeue = new Map();
+const commandqueue = new Map();
 const channels = new Map();
 const isServerNumFree = function(num) {
-	return !queue.has(num);
+	return !messagequeue.has(num);
 };
 const addServer = function() {
 	let newservernum;
-	// console.log(queue.size);
+	// console.log(messagequeue.size);
 	let i = 1;
 	while (!newservernum) {
 		if (isServerNumFree(i)) {
@@ -34,7 +35,8 @@ const addServer = function() {
 		}
 		i = i + 1;
 	}
-	queue.set(newservernum, []);
+	messagequeue.set(newservernum, []);
+	commandqueue.set(newservernum, []);
 	const channeldata = new Object();
 	channeldata.type = 'text';
 	channeldata.parent = categorychannel;
@@ -123,9 +125,9 @@ client.on('message', message => {
 		'username': message.member.nickname || message.author.username,
 		'message': message.content,
 	};
-	const currentqueue = queue.get(servernum);
-	currentqueue.push(newmessage);
-	queue.set(servernum, currentqueue);
+	const currentmessagequeue = messagequeue.get(servernum);
+	currentmessagequeue.push(newmessage);
+	messagequeue.set(servernum, currentmessagequeue);
 });
 
 client.on('error', error => {
@@ -155,9 +157,9 @@ app.post('/bot', (req, res) => {
 		const channel = channels.get(bodydata.servernum);
 		channel.delete();
 		channels.delete(bodydata.servernum);
-		queue.delete(bodydata.servernum);
+		messagequeue.delete(bodydata.servernum);
 		res.end();
-	} else if (bodydata.type == 'message') {
+	} else if (bodydata.type == 'heartbeat') {
 		if (bodydata.messages.length != 0) {
 			const embed = new RichEmbed();
 			for (let i = 0; i < bodydata.messages.length; i++) {
@@ -172,9 +174,10 @@ app.post('/bot', (req, res) => {
 		topic = topic.substring(0, topic.length - 2);
 		channels.get(bodydata.servernum).setTopic(topic);
 		response.servernum = bodydata.servernum;
-		response.messages = queue.get(bodydata.servernum);
+		response.messages = messagequeue.get(bodydata.servernum);
+		response.commands = commandqueue.get(bodydata.servernum);
 		console.log(response);
-		queue.set(bodydata.servernum, []);
+		messagequeue.set(bodydata.servernum, []);
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
