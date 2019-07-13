@@ -5,13 +5,16 @@ const client = new Client();
 
 let guild;
 let categorychannel;
+let fulllogchannel;
+
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
 	console.log(date);
 	console.log(`Logged in as ${client.user.tag}!`);
 	guild = client.guilds.get(process.env.GUILD_ID);
-	categorychannel = guild.channels.get(process.env.CATEGORY_ID);
-	if (categorychannel) {
+	categorychannel = guild && guild.channels.get(process.env.CATEGORY_ID);
+	fulllogchannel = guild && guild.channels.get(process.env.FULL_LOG_ID);
+	if (categorychannel && fulllogchannel) {
 		console.log('Found guild');
 	} else {
 		console.error('Couldn\'t find guild');
@@ -155,6 +158,9 @@ app.post('/bot', (req, res) => {
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
 		const channel = channels.get(bodydata.servernum);
+		for (const [key,value] of channel.messages.filter(message => message.author.id == client.user.id)) {
+			fulllogchannel.send('', value.embeds[0]);
+		};
 		channel.delete();
 		channels.delete(bodydata.servernum);
 		messagequeue.delete(bodydata.servernum);
