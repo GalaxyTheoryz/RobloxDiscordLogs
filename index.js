@@ -159,6 +159,7 @@ app.post('/bot', (req, res) => {
 	} else if (bodydata.type == 'serverclose') {
 		const channel = channels.get(bodydata.servernum);
 		for (const [key,value] of channel.messages.filter(message => message.author.id == client.user.id)) {
+			console.log(value)
 			fulllogchannel.send('', value.embeds[0]);
 		};
 		channel.delete();
