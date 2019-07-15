@@ -146,7 +146,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/bot', (req, res) => {
+app.post('/bot', async (req, res) => {
 	console.log('got POST request on /bot:');
 	console.log(req.body);
 	// const bodydata = require(req.body);
