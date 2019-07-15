@@ -28,8 +28,8 @@ const channels = new Map();
 const isServerNumFree = function(num) {
 	return !messagequeue.has(num);
 };
-const addServer = function() {
-	let newservernum;
+const addServer = function(preferred) {
+	let newservernum = preferred;
 	// console.log(messagequeue.size);
 	let i = 1;
 	while (!newservernum) {
@@ -172,6 +172,9 @@ app.post('/bot', async (req, res) => {
 		messagequeue.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'heartbeat') {
+		if (!channels.has(bodydata.servernum)) {
+			addServer(bodydata.servernum);
+		}
 		if (bodydata.messages.length != 0) {
 			const embed = new RichEmbed();
 			for (let i = 0; i < bodydata.messages.length; i++) {
