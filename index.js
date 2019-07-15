@@ -161,7 +161,7 @@ app.post('/bot', async (req, res) => {
 		for (const [key,value] of channel.messages.filter(message => message.author.id == client.user.id)) {
 			console.log(value.embeds);
 			// console.log(value)
-			await fulllogchannel.send('', value.embeds[0]);
+			await fulllogchannel.send('', new RichEmbed(value.embeds[0]));
 		};
 		channel.delete();
 		channels.delete(bodydata.servernum);
