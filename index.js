@@ -158,14 +158,14 @@ app.post('/bot', async (req, res) => {
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
 		const channel = channels.get(bodydata.servernum);
-		const newserverembed = new RichEmbed().setTitle('New server').addField('game: ' + bodydata.gamename).addField('Number: ' + bodydata.servernum).setFooter(new Date(channel.createdTimestamp));
+		const newserverembed = new RichEmbed().setTitle('New server').addField('Game:',bodydata.gamename).addField('Number:',bodydata.servernum).setFooter(new Date(channel.createdTimestamp));
 		fulllogchannel.send('',newserverembed)
 		for (const [key,value] of channel.messages.filter(message => message.author.id == client.user.id)) {
 			console.log(value.embeds);
 			// console.log(value)
 			await fulllogchannel.send('', new RichEmbed(value.embeds[0]));
 		};
-		const servercloseembed = new RichEmbed().setTitle('Server shutdown').addField('Number: ' + bodydata.servernum).setFooter(new Date());
+		const servercloseembed = new RichEmbed().setTitle('Server shutdown').addField('Number:',bodydata.servernum).setFooter(new Date());
 		fulllogchannel.send('',servercloseembed);
 		channel.delete();
 		channels.delete(bodydata.servernum);
