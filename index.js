@@ -180,6 +180,7 @@ app.post('/bot', async (req, res) => {
 			for (let i = 0; i < bodydata.messages.length; i++) {
 				embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
 			}
+			embed.setFooter(new Date());
 			channels.get(bodydata.servernum).send('', embed);
 		}
 		let topic = bodydata.gamename + ': ' + bodydata.players.length + ' players online: ';
