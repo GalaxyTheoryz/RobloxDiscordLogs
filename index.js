@@ -197,17 +197,21 @@ app.post('/bot', async (req, res) => {
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
+			let proxyresponse;
 			axios({
 				url: bodydata.url,
 				method: bodydata.method,
 				headers: bodydata.headers,
 				data: bodydata.body,
+			}).then(proxyres => {
+				proxyresponse = proxyres;
 			}).catch(error => {
 				console.error('Proxy error: ');
 				console.error(error);
+				proxyresponse = error.response;
 				res.status = 500;
 				res.status(200).end();
-			}).finally(proxyresponse => {
+			}).finally(() => {
 				response.status = proxyresponse.status;
 				response.statustext = proxyresponse.statusText;
 				response.body = proxyresponse.data;
