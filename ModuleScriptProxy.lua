@@ -1,7 +1,7 @@
 local module = {}
 
 local httpservice = game:GetService("HttpService")
-local proxyurl = "http://your.domain.here/bot/"
+local proxyurl = require(script.URL)
 
 module.get = function(url, headers)
     local request = {}
@@ -25,34 +25,40 @@ module.delete = function(url, headers)
     return response
 end
 
-module.post = function(url, request, headers)
-    if not request then error("Invalid proxy request") end
+module.post = function(url, data, headers)
+    if not data then error("Invalid proxy request") end
+	local request = {}
     request.type = "proxy"
     request.url = url
     request.method = "post"
     request.headers = headers
+	request.body = data
     local encodedrequest = httpservice:JSONEncode(request)
     local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
-module.put = function(url, request, headers)
-    if not request then error("Invalid proxy request") end
+module.put = function(url, data, headers)
+    if not data then error("Invalid proxy request") end
+	local request = {}
     request.type = "proxy"
     request.url = url
     request.method = "put"
     request.headers = headers
+	request.body = data
     local encodedrequest = httpservice:JSONEncode(request)
     local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
-module.patch = function(url, request, headers)
-    if not request then error("Invalid proxy request") end
+module.patch = function(url, data, headers)
+    if not data then error("Invalid proxy request") end
+	local request = {}
     request.type = "proxy"
     request.url = url
     request.method = "patch"
     request.headers = headers
+	request.body = data
     local encodedrequest = httpservice:JSONEncode(request)
     local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
