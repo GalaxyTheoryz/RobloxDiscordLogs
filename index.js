@@ -202,16 +202,17 @@ app.post('/bot', async (req, res) => {
 				method: bodydata.method,
 				headers: bodydata.headers,
 				data: bodydata.body,
-			}).then(proxyresponse => {
+			}).catch(error => {
+				console.error('Proxy error: ');
+				console.error(error);
+				res.status = 500;
+				res.status(200).end();
+			}).finally(proxyresponse => {
 				response.status = proxyresponse.status;
 				response.statustext = proxyresponse.statusText;
 				response.body = proxyresponse.data;
 				response.headers = proxyresponse.headers;
 				res.json(response);
-			}).catch(error => {
-				console.error('Proxy error: ');
-				console.error(error);
-				res.status(500).end();
 			});
 		} catch (error) {
 			console.error('Proxy error: ');
