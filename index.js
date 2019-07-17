@@ -209,7 +209,7 @@ app.post('/bot', async (req, res) => {
 				console.error('Proxy error: ');
 				console.error(error);
 				proxyresponse = error.response;
-				res.status = 500;
+				response.status = 500;
 				res.status(200).end();
 			}).finally(() => {
 				response.status = proxyresponse.status;
