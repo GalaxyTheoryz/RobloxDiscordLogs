@@ -151,22 +151,22 @@ app.post('/bot', async (req, res) => {
 	console.log(req.body);
 	// const bodydata = require(req.body);
 	const bodydata = req.body;
-	let response = {};
+	const response = {};
 	if (bodydata.type == 'newserver') {
 		const servernum = addServer();
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
 		const channel = channels.get(bodydata.servernum);
-		const newserverembed = new RichEmbed().setTitle('New server').addField('Game:',bodydata.gamename).addField('Number:',bodydata.servernum).setFooter(new Date(channel.createdTimestamp));
-		fulllogchannel.send('',newserverembed)
-		for (const [key,value] of channel.messages.filter(message => message.author.id == client.user.id)) {
+		const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', bodydata.gamename).addField('Number:', bodydata.servernum).setFooter(new Date(channel.createdTimestamp));
+		fulllogchannel.send('', newserverembed);
+		for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
 			console.log(value.embeds);
 			// console.log(value)
 			await fulllogchannel.send('', new RichEmbed(value.embeds[0]));
-		};
-		const servercloseembed = new RichEmbed().setTitle('Server shutdown').addField('Number:',bodydata.servernum).setFooter(new Date());
-		fulllogchannel.send('',servercloseembed);
+		}
+		const servercloseembed = new RichEmbed().setTitle('Server shutdown').addField('Number:', bodydata.servernum).setFooter(new Date());
+		fulllogchannel.send('', servercloseembed);
 		channel.delete();
 		channels.delete(bodydata.servernum);
 		messagequeue.delete(bodydata.servernum);
@@ -201,12 +201,15 @@ app.post('/bot', async (req, res) => {
 				url: bodydata.url,
 				method: bodydata.method,
 			}).then(proxyresponse => {
-				response = proxyresponse;
+				response.status = proxyresponse.status;
+				response.statustext = proxyresponse.statusText;
+				response.body = proxyresponse.data;
+				response.headers = proxyresponse.headers;
+				res.json(response);
 			}).catch(error => {
 				console.error('Proxy error: ');
 				console.error(error);
-			}).finally(() => {
-				res.send(response);
+				res.status(500).end();
 			});
 		} catch (error) {
 			console.error('Proxy error: ');
@@ -216,7 +219,7 @@ app.post('/bot', async (req, res) => {
 });
 
 app.get('/bot', (req, res) => {
-	res.status(405).send('Method Not Allowed');
+	res.status(405).end();
 });
 
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,

@@ -83,3 +83,4 @@ typings/
 
 #VSCode
 .code-workspace
+.vscode/
