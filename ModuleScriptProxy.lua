@@ -5,6 +5,7 @@ local proxyurl = "http://your.domain.here/bot/"
 
 module.get = function(url, headers)
     local request = {}
+    request.type = "proxy"
     request.url = url
     request.method = "get"
     request.headers = headers
@@ -15,6 +16,7 @@ end
 
 module.delete = function(url, headers)
     local request = {}
+    request.type = "proxy"
     request.url = url
     request.method = "delete"
     request.headers = headers
@@ -25,6 +27,7 @@ end
 
 module.post = function(url, request, headers)
     if not request then error("Invalid proxy request") end
+    request.type = "proxy"
     request.url = url
     request.method = "post"
     request.headers = headers
@@ -35,6 +38,7 @@ end
 
 module.put = function(url, request, headers)
     if not request then error("Invalid proxy request") end
+    request.type = "proxy"
     request.url = url
     request.method = "put"
     request.headers = headers
@@ -45,6 +49,7 @@ end
 
 module.patch = function(url, request, headers)
     if not request then error("Invalid proxy request") end
+    request.type = "proxy"
     request.url = url
     request.method = "patch"
     request.headers = headers
