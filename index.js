@@ -192,7 +192,6 @@ app.post('/bot', async (req, res) => {
 		response.servernum = bodydata.servernum;
 		response.messages = messagequeue.get(bodydata.servernum);
 		response.commands = commandqueue.get(bodydata.servernum);
-		console.log(response);
 		messagequeue.set(bodydata.servernum, []);
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
@@ -206,8 +205,8 @@ app.post('/bot', async (req, res) => {
 			}).then(proxyres => {
 				proxyresponse = proxyres;
 			}).catch(error => {
-				console.error('Proxy error: ');
-				console.error(error);
+				console.error('Proxy error');
+				// console.error(error);
 				proxyresponse = error.response;
 			}).finally(() => {
 				response.status = proxyresponse.status;
@@ -220,6 +219,7 @@ app.post('/bot', async (req, res) => {
 			console.error('Proxy error: ');
 			console.error(error);
 		}
+		console.log(response);
 	}
 });
 
