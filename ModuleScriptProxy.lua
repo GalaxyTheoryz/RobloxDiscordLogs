@@ -7,7 +7,9 @@ module.get = function(url, headers)
     local request = {}
     request.url = url
     request.method = "get"
-    local response = httpservice:PostAsync(proxyurl, request)
+    request.headers = headers
+    local encodedrequest = httpservice:JSONEncode(request)
+    local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
@@ -15,30 +17,40 @@ module.delete = function(url, headers)
     local request = {}
     request.url = url
     request.method = "delete"
-    local response = httpservice:PostAsync(proxyurl, request)
+    request.headers = headers
+    local encodedrequest = httpservice:JSONEncode(request)
+    local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
-module.post = function(url, request)
+module.post = function(url, request, headers)
     if not request then error("Invalid proxy request") end
     request.url = url
     request.method = "post"
-    local response = httpservice:PostAsync(proxyurl, request)
+    request.headers = headers
+    local encodedrequest = httpservice:JSONEncode(request)
+    local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
-module.put = function(url, request)
+module.put = function(url, request, headers)
     if not request then error("Invalid proxy request") end
     request.url = url
     request.method = "put"
-    local response = httpservice:PostAsync(proxyurl, request)
+    request.headers = headers
+    local encodedrequest = httpservice:JSONEncode(request)
+    local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
 
-module.patch = function(url, request)
+module.patch = function(url, request, headers)
     if not request then error("Invalid proxy request") end
     request.url = url
     request.method = "patch"
-    local response = httpservice:PostAsync(proxyurl, request)
+    request.headers = headers
+    local encodedrequest = httpservice:JSONEncode(request)
+    local response = httpservice:PostAsync(proxyurl, encodedrequest)
     return response
 end
+
+return module

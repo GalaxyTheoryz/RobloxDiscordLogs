@@ -200,6 +200,7 @@ app.post('/bot', async (req, res) => {
 			axios({
 				url: bodydata.url,
 				method: bodydata.method,
+				headers: bodydata.headers,
 			}).then(proxyresponse => {
 				response.status = proxyresponse.status;
 				response.statustext = proxyresponse.statusText;
