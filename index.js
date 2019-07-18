@@ -169,7 +169,7 @@ app.post('/bot', async (req, res) => {
 		const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', bodydata.gamename).setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
 		fulllogchannel.send('', newserverembed);
 		for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
-			console.log(value.embeds);
+			// console.log(value.embeds);
 			// console.log(value)
 			await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
 		}
