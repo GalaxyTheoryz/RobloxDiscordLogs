@@ -213,13 +213,13 @@ app.post('/bot', async (req, res) => {
 				response.statustext = proxyresponse.statusText;
 				response.body = proxyresponse.data;
 				response.headers = proxyresponse.headers;
+				console.log(response);
 				res.json(response);
 			});
 		} catch (error) {
 			console.error('Proxy error: ');
 			console.error(error);
 		}
-		console.log(response);
 	}
 });
 
