@@ -113,14 +113,23 @@ client.on('raw', async event => {
 */
 // end - MessageReaction
 
-client.on('message', message => {
+client.on('message', async message => {
 	if (message.author.id == client.user.id) {
 		return;
 	}
 	console.log(message.author.tag + ': ' + message.content);
 	// console.log(message.channel);
+	if (message.channel == fulllogchannel && message.content == 'cleanup') {
+		const toedit = await message.channel.send('cleaning channels');
+		for (const [, channel] of categorychannel.children) {
+			if (channel != fulllogchannel && !findServerFromChannel(channel)) {
+				channel.delete('Server shutdown');
+			}
+		}
+		toedit.edit('Cleaned channels!');
+	}
 	const servernum = findServerFromChannel(message.channel);
-	console.log(servernum);
+	// console.log(servernum);
 	if (!servernum) {
 		return;
 	}
@@ -167,7 +176,7 @@ app.post('/bot', async (req, res) => {
 		}
 		const servercloseembed = new RichEmbed().setTitle('Server shutdown').addField('Number:', bodydata.servernum).setFooter(new Date()).setColor([255, 0, 0]);
 		fulllogchannel.send('', servercloseembed);
-		channel.delete();
+		channel.delete('Server shutdown');
 		channels.delete(bodydata.servernum);
 		messagequeue.delete(bodydata.servernum);
 		res.end();
@@ -223,7 +232,7 @@ app.post('/bot', async (req, res) => {
 	}
 });
 
-app.get('/bot', (req, res) => {
+app.get('/bot', async (req, res) => {
 	res.status(405).end();
 });
 
