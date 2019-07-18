@@ -28,7 +28,7 @@ const channels = new Map();
 const isServerNumFree = function(num) {
 	return !messagequeue.has(num);
 };
-const addServer = function(preferred) {
+const addServer = async function(preferred) {
 	let newservernum = preferred;
 	// console.log(messagequeue.size);
 	let i = 1;
@@ -43,9 +43,8 @@ const addServer = function(preferred) {
 	const channeldata = new Object();
 	channeldata.type = 'text';
 	channeldata.parent = categorychannel;
-	guild.createChannel('Server' + newservernum, channeldata).then((newchannel => {
-		channels.set(newservernum, newchannel);
-	}));
+	const newchannel = await guild.createChannel('Server' + newservernum, channeldata);
+	channels.set(newservernum, newchannel);
 	console.log('New server: ' + newservernum);
 	return newservernum;
 };
