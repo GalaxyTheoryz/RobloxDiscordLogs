@@ -181,7 +181,7 @@ app.post('/bot', async (req, res) => {
 		res.end();
 	} else if (bodydata.type == 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
-			addServer(bodydata.servernum);
+			await addServer(bodydata.servernum);
 		}
 		if (bodydata.messages.length != 0) {
 			const embed = new RichEmbed();
