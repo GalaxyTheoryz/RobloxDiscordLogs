@@ -161,7 +161,7 @@ app.post('/bot', async (req, res) => {
 	const bodydata = req.body;
 	const response = {};
 	if (bodydata.type == 'newserver') {
-		const servernum = addServer();
+		const servernum = await addServer();
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
