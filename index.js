@@ -144,7 +144,7 @@ client.on('message', async message => {
 			}
 		}
 		for (const [server, lastdate] of lastmessages) {
-			if (lastdate < new Date() - 60) {
+			if (lastdate < new Date() - 60000) {
 				deleteServer(server, 'unknown');
 			}
 		}
