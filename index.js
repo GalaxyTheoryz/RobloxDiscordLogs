@@ -141,7 +141,8 @@ client.on('message', async message => {
 		fulllogchannel.send('', servercloseembed);
 		channel.delete('Server shutdown');
 		channels.delete(server);
-		messagequeue.delete(server)
+		messagequeue.delete(server);
+		lastmessages.delete(server);
 			}
 		}
 		toedit.edit('Cleaned channels!');
@@ -197,6 +198,7 @@ app.post('/bot', async (req, res) => {
 		channel.delete('Server shutdown');
 		channels.delete(bodydata.servernum);
 		messagequeue.delete(bodydata.servernum);
+		lastmessages.delete(bodydata.servernum);
 		res.end();
 	} else if (bodydata.type == 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
