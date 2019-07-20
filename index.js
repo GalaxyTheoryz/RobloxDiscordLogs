@@ -129,19 +129,19 @@ client.on('message', async message => {
 		}
 		for (const [server, lastdate] of latestmessages) {
 			if (lastdate < new Date() - 60) {
-						const channel = channels.get(bodydata.servernum);
-		const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', bodydata.gamename).setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
+						const channel = channels.get(server);
+						const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', bodydata.gamename).setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
 		fulllogchannel.send('', newserverembed);
 		for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
 			// console.log(value.embeds);
 			// console.log(value)
 			await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
 		}
-		const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter(new Date()).setColor([255, 0, 0]);
+		const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter('Time unknown').setColor([255, 0, 0]);
 		fulllogchannel.send('', servercloseembed);
 		channel.delete('Server shutdown');
-		channels.delete(bodydata.servernum);
-		messagequeue.delete(bodydata.servernum)
+		channels.delete(server);
+		messagequeue.delete(server)
 			}
 		}
 		toedit.edit('Cleaned channels!');
