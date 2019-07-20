@@ -30,11 +30,13 @@ success, err = pcall(function() -- start pcall function
 local posturl = "http://your.domain.here/bot/"
 local httpservice = game:GetService("HttpService")
 local chat = game:GetService("Chat")
+local marketplaceService = game:GetService("MarketplaceService")
+local gamename = marketplaceService:GetProductInfo(game.PlaceId).Name
 local ChatBroadcastRemote = game:GetService("ReplicatedStorage").ChatBroadcastDiscord
 local CommandRanBindable = game.ServerStorage:FindFirstChild("CommandRanBindable")
 local RunCommandBindable = game.ServerStorage:FindFirstChild("RunCommandBindable")
 local startdata = {
-    ["type"] = "newserver"
+	["type"] = "newserver",
 }
 local startdataencoded = httpservice:JSONEncode(startdata)
 local responsestart = httpservice:PostAsync(posturl, startdataencoded)
@@ -43,8 +45,6 @@ print(responsestart)
 local startresponsedecoded = httpservice:JSONDecode(responsestart)
 local servernum = startresponsedecoded.servernum
 if not servernum then error("Didn't receive servernum") end
-local marketplaceService = game:GetService("MarketplaceService")
-local gamename = marketplaceService:GetProductInfo(game.PlaceId).Name
 
 local messagequeue = {}
 local function onPlayerChatted(msg, target, player)
@@ -125,6 +125,12 @@ local function onHeartbeat(delta)
                 end
 
             end
+		end
+		if (messagesDecoded.commands) then
+			print(messagesDecoded.commands)
+			for i = 1, #messagesDecoded.commands do
+				RunCommandBindable:Fire(messagesDecoded.commands[i])
+			end
         end
     end
 end

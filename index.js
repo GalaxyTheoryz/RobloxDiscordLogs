@@ -24,7 +24,7 @@ client.on('ready', () => {
 
 const messagequeue = new Map();
 const commandqueue = new Map();
-const latestmessages = new Map();
+const lastmessages = new Map();
 const channels = new Map();
 const isServerNumFree = function(num) {
 	return !messagequeue.has(num);
@@ -41,7 +41,7 @@ const addServer = async function(preferred) {
 	}
 	messagequeue.set(newservernum, []);
 	commandqueue.set(newservernum, []);
-	latestmessages.set(newservernum, new Date());
+	lastmessages.set(newservernum, new Date());
 	const channeldata = new Object();
 	channeldata.type = 'text';
 	channeldata.parent = categorychannel;
@@ -127,22 +127,22 @@ client.on('message', async message => {
 				channel.delete('Server shutdown');
 			}
 		}
-		for (const [server, lastdate] of latestmessages) {
+		for (const [server, lastdate] of lastmessages) {
 			if (lastdate < new Date() - 60) {
-						const channel = channels.get(server);
-						const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', 'unknown').setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
-		fulllogchannel.send('', newserverembed);
-		for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
-			// console.log(value.embeds);
-			// console.log(value)
-			await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
-		}
-		const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter('Time unknown').setColor([255, 0, 0]);
-		fulllogchannel.send('', servercloseembed);
-		channel.delete('Server shutdown');
-		channels.delete(server);
-		messagequeue.delete(server);
-		lastmessages.delete(server);
+				const channel = channels.get(server);
+				const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', 'unknown').setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
+				fulllogchannel.send('', newserverembed);
+				for (const [, value] of channel.messages.filter(messagetofilter => messagetofilter.author.id == client.user.id)) {
+					// console.log(value.embeds);
+					// console.log(value)
+					await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
+				}
+				const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter('Time unknown').setColor([255, 0, 0]);
+				fulllogchannel.send('', servercloseembed);
+				channel.delete('Server shutdown');
+				channels.delete(server);
+				messagequeue.delete(server);
+				lastmessages.delete(server);
 			}
 		}
 		toedit.edit('Cleaned channels!');
