@@ -130,7 +130,7 @@ client.on('message', async message => {
 		for (const [server, lastdate] of latestmessages) {
 			if (lastdate < new Date() - 60) {
 						const channel = channels.get(server);
-						const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', bodydata.gamename).setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
+						const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', 'unknown').setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
 		fulllogchannel.send('', newserverembed);
 		for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
 			// console.log(value.embeds);
