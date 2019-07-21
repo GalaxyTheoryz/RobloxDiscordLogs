@@ -6,7 +6,7 @@ const client = new Client();
 let guild;
 let categorychannel;
 let fulllogchannel;
-
+let errorchannel;
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
 	console.log(date);
@@ -14,10 +14,11 @@ client.on('ready', () => {
 	guild = client.guilds.get(process.env.GUILD_ID);
 	categorychannel = guild && guild.channels.get(process.env.CATEGORY_ID);
 	fulllogchannel = guild && guild.channels.get(process.env.FULL_LOG_ID);
-	if (categorychannel && fulllogchannel) {
-		console.log('Found guild');
+	errorchannel = guild && guild.channels.get(process.env.ERROR_CHANNEL_ID);
+	if (categorychannel && fulllogchannel && errorchannel) {
+		console.log('Found guild and channels!');
 	} else {
-		console.error('Couldn\'t find guild');
+		console.error('Couldn\'t find guild!');
 	}
 	// console.log(LogChannel);
 });
@@ -139,7 +140,7 @@ client.on('message', async message => {
 	if (message.channel == fulllogchannel && message.content == 'cleanup') {
 		const toedit = await message.channel.send('Cleaning channels!');
 		for (const [, channel] of categorychannel.children) {
-			if (channel != fulllogchannel && !findServerFromChannel(channel)) {
+			if (channel != fulllogchannel && channel != errorchannel && !findServerFromChannel(channel)) {
 				channel.delete('Server shutdown');
 			}
 		}
