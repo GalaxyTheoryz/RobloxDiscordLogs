@@ -18,7 +18,8 @@ client.on('ready', () => {
 	if (categorychannel && fulllogchannel && errorchannel) {
 		console.log('Found guild and channels!');
 	} else {
-		console.error('Couldn\'t find guild!');
+		console.error('Couldn\'t find all channels!');
+		process.exit(1);
 	}
 	// console.log(LogChannel);
 });
