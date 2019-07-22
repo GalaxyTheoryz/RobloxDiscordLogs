@@ -214,6 +214,7 @@ app.post('/bot', async (req, res) => {
 		response.messages = messagequeue.get(bodydata.servernum);
 		response.commands = commandqueue.get(bodydata.servernum);
 		messagequeue.set(bodydata.servernum, []);
+		lastmessages.set(bodydata.servernum, new Date());
 		res.json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
