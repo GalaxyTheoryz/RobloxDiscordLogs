@@ -136,7 +136,7 @@ client.on('message', async message => {
 	if (message.author.id == client.user.id) {
 		return;
 	}
-	console.log(message.author.tag + ': ' + message.content);
+	// console.log(message.author.tag + ': ' + message.content);
 	// console.log(message.channel);
 	if (message.channel == fulllogchannel && message.content == 'cleanup') {
 		const toedit = await message.channel.send('Cleaning channels!');
@@ -180,8 +180,8 @@ const app = express();
 app.use(express.json());
 
 app.post('/bot', async (req, res) => {
-	console.log('got POST request on /bot:');
-	console.log(req.body);
+	// console.log('got POST request on /bot:');
+	// console.log(req.body);
 	// const bodydata = require(req.body);
 	const bodydata = req.body;
 	const response = {};
@@ -190,6 +190,7 @@ app.post('/bot', async (req, res) => {
 		response.servernum = servernum;
 		res.json(response);
 	} else if (bodydata.type == 'serverclose') {
+		console.log('Server shutdown: ' + bodydata.servernum);
 		deleteServer(bodydata.servernum, bodydata.gamename);
 		res.end();
 	} else if (bodydata.type == 'heartbeat') {
@@ -235,7 +236,7 @@ app.post('/bot', async (req, res) => {
 				response.statustext = proxyresponse.statusText;
 				response.body = proxyresponse.data;
 				response.headers = proxyresponse.headers;
-				console.log(response);
+				// console.log(response);
 				res.json(response);
 			});
 		} catch (error) {
@@ -246,7 +247,7 @@ app.post('/bot', async (req, res) => {
 });
 
 app.get('/bot', async (req, res) => {
-	res.status(405).end();
+	res.sendStatus(405);
 });
 
 const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
