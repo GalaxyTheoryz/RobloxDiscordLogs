@@ -188,11 +188,11 @@ app.post('/bot', async (req, res) => {
 	if (bodydata.type == 'newserver') {
 		const servernum = await addServer();
 		response.servernum = servernum;
-		res.json(response);
+		res.status(200).json(response);
 	} else if (bodydata.type == 'serverclose') {
 		console.log('Server shutdown: ' + bodydata.servernum);
 		deleteServer(bodydata.servernum, bodydata.gamename);
-		res.end();
+		res.sendStatus(205);
 	} else if (bodydata.type == 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
 			await addServer(bodydata.servernum);
@@ -216,7 +216,7 @@ app.post('/bot', async (req, res) => {
 		response.commands = commandqueue.get(bodydata.servernum);
 		messagequeue.set(bodydata.servernum, []);
 		lastmessages.set(bodydata.servernum, new Date());
-		res.json(response);
+		res.status(200).json(response);
 	} else if (bodydata.type == 'proxy') {
 		try {
 			let proxyresponse;
