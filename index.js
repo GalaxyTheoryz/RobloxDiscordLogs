@@ -192,7 +192,7 @@ app.post('/bot', async (req, res) => {
 	} else if (bodydata.type == 'serverclose') {
 		console.log('Server shutdown: ' + bodydata.servernum);
 		deleteServer(bodydata.servernum, bodydata.gamename);
-		res.sendStatus(205);
+		res.sendStatus(204);
 	} else if (bodydata.type == 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
 			await addServer(bodydata.servernum);
