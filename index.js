@@ -218,31 +218,26 @@ app.post('/bot', async (req, res) => {
 		lastmessages.set(bodydata.servernum, new Date());
 		res.status(200).json(response);
 	} else if (bodydata.type == 'proxy') {
-		try {
-			let proxyresponse;
-			axios({
-				url: bodydata.url,
-				method: bodydata.method,
-				headers: bodydata.headers,
-				data: bodydata.body,
-			}).then(proxyres => {
-				proxyresponse = proxyres;
-			}).catch(error => {
-				console.error('Proxy error');
-				// console.error(error);
-				proxyresponse = error.response;
-			}).finally(() => {
-				response.status = proxyresponse.status;
-				response.statustext = proxyresponse.statusText;
-				response.body = proxyresponse.data;
-				response.headers = proxyresponse.headers;
-				// console.log(response);
-				res.json(response);
-			});
-		} catch (error) {
-			console.error('Proxy error: ');
+		let proxyresponse;
+		axios({
+			url: bodydata.url,
+			method: bodydata.method,
+			headers: bodydata.headers,
+			data: bodydata.body,
+		}).then(proxyres => {
+			proxyresponse = proxyres;
+		}).catch(error => {
+			console.error('Proxy error');
 			console.error(error);
-		}
+			proxyresponse = error.response;
+		}).finally(() => {
+			response.status = proxyresponse.status;
+			response.statustext = proxyresponse.statusText;
+			response.body = proxyresponse.data;
+			response.headers = proxyresponse.headers;
+			// console.log(response);
+			res.json(response);
+		});
 	}
 });
 
