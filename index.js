@@ -196,6 +196,7 @@ app.post('/bot', async (req, res) => {
 		console.log('Server shutdown: ' + bodydata.servernum);
 		deleteServer(bodydata.servernum, bodydata.gamename);
 		res.sendStatus(204);
+		console.log(res);
 	} else if (bodydata.type == 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
 			await addServer(bodydata.servernum);
