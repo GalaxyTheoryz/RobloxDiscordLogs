@@ -17,6 +17,7 @@ client.on('ready', () => {
 	errorchannel = guild && guild.channels.get(process.env.ERROR_CHANNEL_ID);
 	if (categorychannel && fulllogchannel && errorchannel) {
 		console.log('Found guild and channels!');
+		cleanup();
 	} else {
 		console.error('Couldn\'t find all channels!');
 		process.exit(1);
@@ -80,6 +81,21 @@ const deleteServer = async function(servernum, gamename) {
 	messagequeue.delete(servernum);
 	lastmessages.delete(servernum);
 };
+
+const cleanup = async function(message) {
+	const toedit = message && await message.channel.send('Cleaning channels!');
+	for (const [, channel] of categorychannel.children) {
+		if (channel != fulllogchannel && channel != errorchannel && !findServerFromChannel(channel)) {
+			channel.delete('Server shutdown');
+		}
+	}
+	for (const [server, lastdate] of lastmessages) {
+		if (lastdate < new Date() - 60000) {
+			deleteServer(server, 'unknown');
+		}
+	}
+	toedit && toedit.edit('Cleaned channels!');
+};
 // start - messageReaction
 /* only for emoji adds, but we don't do anything with those (yet)
 client.on('raw', async event => {
@@ -139,18 +155,7 @@ client.on('message', async message => {
 	// console.log(message.author.tag + ': ' + message.content);
 	// console.log(message.channel);
 	if (message.channel == fulllogchannel && message.content == 'cleanup') {
-		const toedit = await message.channel.send('Cleaning channels!');
-		for (const [, channel] of categorychannel.children) {
-			if (channel != fulllogchannel && channel != errorchannel && !findServerFromChannel(channel)) {
-				channel.delete('Server shutdown');
-			}
-		}
-		for (const [server, lastdate] of lastmessages) {
-			if (lastdate < new Date() - 60000) {
-				deleteServer(server, 'unknown');
-			}
-		}
-		toedit.edit('Cleaned channels!');
+		cleanup(message);
 	}
 	const servernum = findServerFromChannel(message.channel);
 	// console.log(servernum);
