@@ -6,7 +6,6 @@ const client = new Client();
 let guild;
 let categorychannel;
 let fulllogchannel;
-let errorchannel;
 client.on('ready', () => {
 	const date = new Date(client.readyTimestamp);
 	console.log(date);
@@ -14,8 +13,7 @@ client.on('ready', () => {
 	guild = client.guilds.get(process.env.GUILD_ID);
 	categorychannel = guild && guild.channels.get(process.env.CATEGORY_ID);
 	fulllogchannel = guild && guild.channels.get(process.env.FULL_LOG_ID);
-	errorchannel = guild && guild.channels.get(process.env.ERROR_CHANNEL_ID);
-	if (categorychannel && fulllogchannel && errorchannel) {
+	if (categorychannel && fulllogchannel) {
 		console.log('Found guild and channels!');
 		cleanup();
 	} else {
@@ -76,7 +74,7 @@ const deleteServer = async function(servernum, gamename) {
 	}
 	const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter(new Date()).setColor([255, 0, 0]);
 	fulllogchannel.send('', servercloseembed);
-	channel.delete('Server shutdown');
+	channel.delete('Server shut down');
 	channels.delete(servernum);
 	messagequeue.delete(servernum);
 	lastmessages.delete(servernum);
@@ -85,8 +83,8 @@ const deleteServer = async function(servernum, gamename) {
 const cleanup = async function(message) {
 	const toedit = message && await message.channel.send('Cleaning channels!');
 	for (const [, channel] of categorychannel.children) {
-		if (channel != fulllogchannel && channel != errorchannel && !findServerFromChannel(channel)) {
-			channel.delete('Server shutdown');
+		if (channel != fulllogchannel && !findServerFromChannel(channel)) {
+			channel.delete('Server shut down');
 		}
 	}
 	for (const [server, lastdate] of lastmessages) {
