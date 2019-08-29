@@ -245,12 +245,12 @@ app.post('/bot', async (req, res) => {
 	}
 });
 
-app.get('/bot', async (req, res) => {
+app.get('/', async (req, res) => {
 	res.sendStatus(405);
 });
 
-const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-	ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const port = process.env.PORT || 8080,
+	ip = process.env.IP || '0.0.0.0';
 
 app.listen(port, ip);
 console.log('App listening on http://%s:%s', ip, port);
