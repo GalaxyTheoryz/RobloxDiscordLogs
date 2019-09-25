@@ -57,7 +57,7 @@ const findServerFromChannel = function(channel) {
 		// console.log(value);
 		// console.log('comparing to');
 		// console.log(channel);
-		if (value == channel) {
+		if (value === channel) {
 			return key;
 		}
 	}
@@ -67,7 +67,7 @@ const deleteServer = async function(servernum, gamename) {
 	const channel = channels.get(servernum);
 	const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', gamename).setTimestamp(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
 	fulllogchannel.send('', newserverembed);
-	for (const [, value] of channel.messages.filter(message => message.author.id == client.user.id)) {
+	for (const [, value] of channel.messages.filter(message => message.author.id === client.user.id)) {
 		// console.log(value.embeds);
 		// console.log(value)
 		await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
@@ -83,7 +83,7 @@ const deleteServer = async function(servernum, gamename) {
 const cleanup = async function(message) {
 	const toedit = message && await message.channel.send('Cleaning channels!');
 	for (const [, channel] of categorychannel.children) {
-		if (channel != fulllogchannel && !findServerFromChannel(channel)) {
+		if (channel !== fulllogchannel && !findServerFromChannel(channel)) {
 			channel.delete('Server shut down');
 		}
 	}
@@ -152,7 +152,7 @@ client.on('message', async message => {
 	}
 	// console.log(message.author.tag + ': ' + message.content);
 	// console.log(message.channel);
-	if (message.channel == fulllogchannel && message.content == 'cleanup') {
+	if (message.channel === fulllogchannel && message.content.toLowerCase() === 'cleanup') {
 		cleanup(message);
 	}
 	const servernum = findServerFromChannel(message.channel);
@@ -188,20 +188,20 @@ app.post('/bot', async (req, res) => {
 	// const bodydata = require(req.body);
 	const bodydata = req.body;
 	const response = {};
-	if (bodydata.type == 'newserver') {
+	if (bodydata.type === 'newserver') {
 		const servernum = await addServer();
 		response.servernum = servernum;
 		res.status(200).json(response);
-	} else if (bodydata.type == 'serverclose') {
+	} else if (bodydata.type === 'serverclose') {
 		console.log('Server shutdown: ' + bodydata.servernum);
 		deleteServer(bodydata.servernum, bodydata.gamename);
 		res.sendStatus(204);
 		// console.log(res);
-	} else if (bodydata.type == 'heartbeat') {
+	} else if (bodydata.type === 'heartbeat') {
 		if (!channels.has(bodydata.servernum)) {
 			await addServer(bodydata.servernum);
 		}
-		if (bodydata.messages.length != 0) {
+		if (bodydata.messages.length !== 0) {
 			const embed = new RichEmbed();
 			for (let i = 0; i < bodydata.messages.length; i++) {
 				embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
@@ -221,7 +221,7 @@ app.post('/bot', async (req, res) => {
 		messagequeue.set(bodydata.servernum, []);
 		lastmessages.set(bodydata.servernum, new Date());
 		res.status(200).json(response);
-	} else if (bodydata.type == 'proxy') {
+	} else if (bodydata.type === 'proxy') {
 		let proxyresponse;
 		axios({
 			url: bodydata.url,
