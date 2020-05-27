@@ -64,8 +64,11 @@ local function onPlayerAdded(plr)
         onPlayerChatted(msg,target,plr)
     end)
 end
-
-game:GetService("Players").PlayerAdded:Connect(onPlayerAdded)
+local PlayersService = game:GetService("Players")
+PlayersService.PlayerAdded:Connect(onPlayerAdded)
+for i,v in ipairs(PlayersService:GetPlayers()) do
+	onPlayerAdded(v)
+end
 
 local commandqueue = {}
 local function onCommandRan(CommandContainer)
