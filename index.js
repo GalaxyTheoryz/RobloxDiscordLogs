@@ -65,14 +65,14 @@ const findServerFromChannel = function(channel) {
 
 const deleteServer = async function(servernum, gamename) {
 	const channel = channels.get(servernum);
-	const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', gamename).setTimestamp(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
+	const newserverembed = new RichEmbed().setTitle('New server').addField('Game:', gamename).setFooter(new Date(channel.createdTimestamp)).setColor([0, 255, 0]);
 	fulllogchannel.send('', newserverembed);
 	for (const [, value] of channel.messages.filter(message => message.author.id === client.user.id)) {
 		// console.log(value.embeds);
 		// console.log(value)
 		await fulllogchannel.send('', new RichEmbed(value.embeds[0]).setColor([0, 0, 255]));
 	}
-	const servercloseembed = new RichEmbed().setTitle('Server shutdown').setTimestamp().setColor([255, 0, 0]);
+	const servercloseembed = new RichEmbed().setTitle('Server shutdown').setFooter(new Date()).setColor([255, 0, 0]);
 	fulllogchannel.send('', servercloseembed);
 	channel.delete('Server shut down');
 	channels.delete(servernum);
@@ -206,7 +206,7 @@ app.post('/bot', async (req, res) => {
 			for (let i = 0; i < bodydata.messages.length; i++) {
 				embed.addField(bodydata.messages[i].username, bodydata.messages[i].content);
 			}
-			embed.setTimestamp();
+			embed.setFooter(new Date());
 			channels.get(bodydata.servernum).send('', embed);
 		}
 		let topic = bodydata.gamename + ': ' + bodydata.players.length + ' players online: ';
